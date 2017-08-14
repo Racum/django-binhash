@@ -1,0 +1,13 @@
+# System
+.DS_Store
+
+# Python
+.env
+__pycache__/
+*.py[cod]
+.eggs
+*.egg-info
+.tox/
+
+# Other
+example/

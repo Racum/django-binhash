@@ -1,0 +1,7 @@
+include LICENSE
+include README.md
+include pypi_description.rst
+recursive-include binhash *
+recursive-include tests *
+recursive-exclude * __pycache__
+recursive-exclude * *.py[co]
