@@ -12,7 +12,7 @@ from binhash import (BinaryHashField, MD5Field, SHA1Field,
 
 class TestField(BinaryHashField):
     algorithm = 'TestHash'
-    hex_lenght = 8
+    hex_length = 8
 
 
 class TestTable(models.Model):
