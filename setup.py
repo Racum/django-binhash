@@ -8,7 +8,7 @@ with open('pypi_description.rst') as readme_file:
 
 setup(
     name='django-binhash',
-    version='0.1.0',
+    version='0.1.1',
     description='Work with hexadecimal, store in binary, using half of the data size.',
     long_description=pypi_description,
     author="Ronaldo Racum",
