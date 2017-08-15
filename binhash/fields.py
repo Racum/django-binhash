@@ -10,7 +10,7 @@ from django.core.exceptions import ValidationError
 
 HEXADECIMAL_VALUES = re.compile(r'^[0-9a-fA-F]+\Z')
 try:
-    basestring  # Legacy Python.
+    basestring  # Python 3 has no basestring
 except NameError:
     basestring = str
 
@@ -28,7 +28,6 @@ class BinaryHashField(Field):
         return "BinaryField"
 
     def hex_to_bytes(self, value):
-        value = basestring(value)
         if value is None:
             return value
         elif isinstance(value, basestring) \
