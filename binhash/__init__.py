@@ -1,6 +1,33 @@
-from .fields import (BinaryHashField, MD5Field, SHA1Field,
-                     SHA224Field, SHA256Field, SHA384Field, SHA512Field)
+from .fields import (
+    BinaryHashField,
+    MD5Field,
+    SHA1Field,
+    SHA224Field,
+    SHA256Field,
+    SHA384Field,
+    SHA512Field,
+    SHA3_224Field,
+    SHA3_256Field,
+    SHA3_384Field,
+    SHA3_512Field,
+    SHAKE128Field,
+    SHAKE256Field,
+    SHAKE512Field,
+)
 
-
-__all__ = ['BinaryHashField', 'MD5Field', 'SHA1Field',
-           'SHA224Field', 'SHA256Field', 'SHA384Field', 'SHA512Field']
+__all__ = [
+    'BinaryHashField',
+    'MD5Field',
+    'SHA1Field',
+    'SHA224Field',
+    'SHA256Field',
+    'SHA384Field',
+    'SHA512Field',
+    'SHA3_224Field',
+    'SHA3_256Field',
+    'SHA3_384Field',
+    'SHA3_512Field',
+    'SHAKE128Field',
+    'SHAKE256Field',
+    'SHAKE512Field',
+]

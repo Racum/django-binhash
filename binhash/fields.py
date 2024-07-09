@@ -1,66 +1,52 @@
-# -*- coding: utf-8 -*-
-
-import re
+from abc import ABC
 import binascii
+import re
 
-from django.core import validators
-from django.db.models.fields import Field
 from django.core.exceptions import ValidationError
-
+from django.core.validators import MaxLengthValidator
+from django.db.models.fields import Field
 
 HEXADECIMAL_VALUES = re.compile(r'^[0-9a-fA-F]+\Z')
-try:
-    basestring  # Python 3 has no basestring
-except NameError:
-    basestring = str
 
 
-class BinaryHashField(Field):
+class BinaryHashField(ABC, Field):
     description = 'Hash data saved as binary'
     empty_values = (None, '')
 
     def __init__(self, *args, **kwargs):
         kwargs['max_length'] = self.hex_length
-        super(BinaryHashField, self).__init__(*args, **kwargs)
-        self.validators.append(validators.MaxLengthValidator(self.max_length))
+        super().__init__(*args, **kwargs)
+        self.validators.append(MaxLengthValidator(self.max_length))
 
     def get_internal_type(self):
-        return "BinaryField"
+        return 'BinaryField'
+
+    def _hex_is_valid(self, value):
+        if isinstance(value, str) and len(value) == self.hex_length and HEXADECIMAL_VALUES.search(str(value)):
+            return value
+        else:
+            raise ValidationError(f'Enter a valid {self.algorithm} (hexadecimal string with {self.hex_length} bytes).')
+
+    def clean(self, value, model_instance):
+        return self._hex_is_valid(value)
 
     def hex_to_bytes(self, value):
         if value is None:
             return value
-        elif isinstance(value, basestring) \
-                and len(value) == self.hex_length \
-                and HEXADECIMAL_VALUES.search(str(value)):
-            return binascii.unhexlify(value)
-        else:
-            message_tpl = 'Enter a valid {alg} (hexadecimal string with {size} bytes).'
-            message = message_tpl.format(alg=self.algorithm, size=self.hex_length)
-            raise ValidationError(message)
+        value = self._hex_is_valid(value)
+        return binascii.unhexlify(value)
 
     def get_db_prep_value(self, value, connection, prepared=False):
-        value = super(BinaryHashField, self).get_db_prep_value(value, connection, prepared)
+        value = super().get_db_prep_value(value, connection, prepared)
         if value not in self.empty_values:
             return connection.Database.Binary(self.hex_to_bytes(value))
 
-    def from_db_value(self, value, expression, connection, context):
+    def from_db_value(self, value, expression, connection, context=None):
         if value not in self.empty_values:
             return binascii.hexlify(value).decode('ascii')
 
-    def to_python(self, value):
-        self.hex_to_bytes(value)
-        return value
-
-    def get_default(self):
-        if self.has_default() and not callable(self.default):
-            self.hex_to_bytes(self.default)
-            return self.default
-        default = super(BinaryHashField, self).get_default()
-        return default
-
     def formfield(self, **kwargs):
-        return super(BinaryHashField, self).formfield(max_length=self.max_length)
+        return super().formfield(max_length=self.max_length)
 
 
 class MD5Field(BinaryHashField):
@@ -96,4 +82,46 @@ class SHA384Field(BinaryHashField):
 class SHA512Field(BinaryHashField):
     description = 'SHA-512 hash data saved as binary'
     algorithm = 'SHA-512'
+    hex_length = 128
+
+
+class SHA3_224Field(BinaryHashField):
+    description = 'SHA3-224 hash data saved as binary'
+    algorithm = 'SHA3-224'
+    hex_length = 56
+
+
+class SHA3_256Field(BinaryHashField):
+    description = 'SHA3-256 hash data saved as binary'
+    algorithm = 'SHA3-256'
+    hex_length = 64
+
+
+class SHA3_384Field(BinaryHashField):
+    description = 'SHA3-384 hash data saved as binary'
+    algorithm = 'SHA3-384'
+    hex_length = 96
+
+
+class SHA3_512Field(BinaryHashField):
+    description = 'SHA3-512 hash data saved as binary'
+    algorithm = 'SHA3-512'
+    hex_length = 128
+
+
+class SHAKE128Field(BinaryHashField):
+    description = 'SHAKE128 hash data saved as binary'
+    algorithm = 'SHAKE128'
+    hex_length = 32
+
+
+class SHAKE256Field(BinaryHashField):
+    description = 'SHAKE256 hash data saved as binary'
+    algorithm = 'SHAKE256'
+    hex_length = 64
+
+
+class SHAKE512Field(BinaryHashField):
+    description = 'SHAKE512 hash data saved as binary'
+    algorithm = 'SHAKE512'
     hex_length = 128

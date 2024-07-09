@@ -23,13 +23,11 @@ INSTALLED_APPS = [
 
 ### Environments
 
-Tested under Python from 3.3 to 3.6 and also *Legacy Python* (2.7).
-
-Tested under Django 1.8 to 1.11, but it can possibly run in versions way older, since the fields structure is stable for a long time.
+Tested under Python from 3.10 to 3.12, and under Django 4.x and 5.x.
 
 ### Databases
 
-At the version `0.1.0` it was only tested on SQLite, but if should work fine in all databases officially supported by Django.
+At the version `0.2.0` it was only tested on SQLite, but if should work fine in all databases officially supported by Django.
 
 ### Formats
 
@@ -42,7 +40,14 @@ At the version `0.1.0` it was only tested on SQLite, but if should work fine in 
 	* `SHA256Field`
 	* `SHA384Field`
 	* `SHA512Field`
-
+* SHA-3
+	* `SHA3_224Field`
+	* `SHA3_256Field`
+	* `SHA3_384Field`
+	* `SHA3_512Field`
+	* `SHAKE128Field`
+	* `SHAKE256Field`
+	* `SHAKE512Field`
 
 ## Usage
 
@@ -64,11 +69,12 @@ Than, proceed using them like CharFields:
 
 ```python
 # Create normaly as if the fields were strings:
-ISOFile.objects.create(name='Ubuntu Server 17.04',
-                       md5sum='d02df11b4a7318b7250824f6d0bab9c0',
-                       sha1sum='bc5fb639724b5cd90eb739845f246e2c564b0dd8',
-                       sha256sum='632e64dde9a7da27fa96bea4d2cf78f0'
-                                 '51065c6becc0d0f728aabfc091396256')
+ISOFile.objects.create(
+    name='Ubuntu Server 17.04',
+    md5sum='d02df11b4a7318b7250824f6d0bab9c0',
+    sha1sum='bc5fb639724b5cd90eb739845f246e2c564b0dd8',
+    sha256sum='632e64dde9a7da27fa96bea4d2cf78f051065c6becc0d0f728aabfc091396256',
+)
 
 # Fetch by string is also supported:
 ubuntu = ISOFile.objects.get(md5sum='d02df11b4a7318b7250824f6d0bab9c0')

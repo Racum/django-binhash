@@ -9,6 +9,10 @@ __pycache__/
 *.egg-info
 .tox/
 dist/
+.ruff_cache
+build
+demo
+.pytest_cache/
 
 # Other
 example/
